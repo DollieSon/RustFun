@@ -1,28 +1,40 @@
 use std::fmt::Display;
 
+pub struct Node<T> {
+    item: T,
+    next: Option<Box<Node<T>>>,
+}
+
 pub struct SinglyLinked<T> {
-    pub elem: T,
-    pub next: Option<Box<SinglyLinked<T>>>,
+    head: Option<Box<Node<T>>>,
+    len: usize,
 }
 
 impl<T: Display> SinglyLinked<T> {
-    pub fn new(item: T) -> Self {
-        SinglyLinked {
-            elem: item,
+    pub fn new(elem: T) -> Self {
+        let new_node = Some(Box::new(Node {
+            item: elem,
             next: None,
+        }));
+        SinglyLinked {
+            head: new_node,
+            len: 1,
         }
     }
-    pub fn print(self) {
-        print!("{} ", self.elem);
-        while let Some(ref item) = self.next {
-            print!("{} ", (*item).elem);
+
+    pub fn print_all(self) {
+        let mut curr = self.head;
+        while let Some(item) = curr {
+            print!("{} ", item.item);
+            curr = item.next;
         }
     }
+
     pub fn insert_from_head(&mut self, item: T) {
-        let new_node = Box::new(SinglyLinked {
-            elem: item,
-            next: self.next.take(),
+        let new_node = Box::new(Node {
+            item: item,
+            next: self.head.take(),
         });
-        self.next = Some(new_node);
+        self.head = Some(new_node);
     }
 }
