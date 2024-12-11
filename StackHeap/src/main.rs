@@ -11,3 +11,9 @@ fn test1() {
         next: None,
     };
 }
+
+fn test2() {
+    use linked_list::singly_linked::*;
+    let list = SinglyLinked::new(21);
+    list.print();
+}
