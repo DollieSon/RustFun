@@ -37,4 +37,16 @@ impl<T: Display> SinglyLinked<T> {
         });
         self.head = Some(new_node);
     }
+    pub fn insert_from_tail(&mut self, item: T) {
+        let new_node = Box::new(Node {
+            item: item,
+            next: None,
+        });
+
+        let mut curr = &mut self.head;
+        while let Some(ref mut node) = curr {
+            curr = &mut node.next;
+        }
+        *curr = Some(new_node);
+    }
 }
