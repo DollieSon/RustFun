@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{borrow::Borrow, fmt::Display};
 
 pub struct Node<T> {
     item: T,
@@ -22,12 +22,13 @@ impl<T: Display> SinglyLinked<T> {
         }
     }
 
-    pub fn print_all(self) {
-        let mut curr = self.head;
+    pub fn print_all(&self) {
+        let mut curr = &self.head;
         while let Some(item) = curr {
             print!("{} ", item.item);
-            curr = item.next;
+            curr = &item.next;
         }
+        print!("\n");
     }
 
     pub fn insert_from_head(&mut self, item: T) {
@@ -36,6 +37,7 @@ impl<T: Display> SinglyLinked<T> {
             next: self.head.take(),
         });
         self.head = Some(new_node);
+        self.len += 1;
     }
     pub fn insert_from_tail(&mut self, item: T) {
         let new_node = Box::new(Node {
@@ -48,5 +50,17 @@ impl<T: Display> SinglyLinked<T> {
             curr = &mut node.next;
         }
         *curr = Some(new_node);
+        self.len += 1;
+    }
+
+    pub fn pop(&mut self) -> T {
+        match self.head.take() {
+            None => panic!("List Is Empty"),
+            Some(node) => {
+                self.head = node.next;
+                self.len -= 1;
+                node.item
+            }
+        }
     }
 }
