@@ -63,4 +63,8 @@ impl<T: Display> SinglyLinked<T> {
             }
         }
     }
+
+    // pub fn pop_end(&mut self) -> T {
+    //     let mut curr = self.head;
+    // }
 }
