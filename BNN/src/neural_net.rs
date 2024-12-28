@@ -6,10 +6,10 @@ pub fn sigmoid(x: &f64) -> f64 {
     return 1.0 / (1.0 + EXP.powf(-x));
 }
 
-struct NeuralNet {
-    input_layer: Vec<f64>,
-    hidden_layer: Vec<f64>,
-    output_size: u32,
+pub struct NeuralNet {
+    pub input_layer: Vec<f64>,
+    pub hidden_layer: Vec<f64>,
+    pub output_size: u32,
 }
 
 impl NeuralNet {
