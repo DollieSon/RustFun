@@ -125,5 +125,21 @@ impl NeuralNet {
         println!("DER Products:");
         der_products.iter().for_each(|error| print!("{}, ", error));
         println!();
+
+        // calclulate the error rate of each neuron
+        let mut error_rate = Vec::<f64>::new();
+        for (index, neuron) in self.hidden_layer.iter().enumerate() {
+            let mut error = 0.0;
+            neuron
+                .weights
+                .iter()
+                .enumerate()
+                .for_each(|index, weight| error += (der_products.get(index).unwrap() * weight));
+            error *= neuron.act_val * (1.0 - neuron.act_val);
+            error_rate.push(error);
+        }
+        println!("Error Rates(Hidden):");
+        error_rate.iter().for_each(|error| print!("{}, ", error));
+        println!();
     }
 }
