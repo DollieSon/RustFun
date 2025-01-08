@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 use rand::Rng;
 
 const EXP: f64 = 2.718281828459045;
@@ -62,6 +64,14 @@ impl NeuralNet {
     }
     // we assume that input is valid as well as output
     pub fn train(&mut self, input: &Vec<f64>, output: &Vec<f64>) {
+        //validate parameters
+        if input.len() != self.input_layer.len() {
+            panic!("input len is incorrect")
+        }
+        if output.len() != self.output_layer.len() {
+            panic!("input len is incorrect")
+        }
+
         // setting input nodes
         println!("Activating Input Layer");
         self.input_layer
@@ -85,15 +95,35 @@ impl NeuralNet {
             .enumerate()
             .for_each(|(index, neuron)| println!("{}", neuron.act_val));
         //calc output
-        println!("{}", self.output_layer.len());
         println!("Activating Output Layer");
         self.output_layer
             .iter_mut()
             .enumerate()
             .for_each(|(index, neuron)| neuron.activate(&self.hidden_layer, index));
-        //print output
-        for neuron in self.output_layer.iter() {
-            println!("{}", neuron.act_val);
+        self.output_layer
+            .iter_mut()
+            .enumerate()
+            .for_each(|(index, neuron)| println!("{}", neuron.act_val));
+
+        //get difference desired output and actual output
+        let mut error_component = Vec::<f64>::new();
+        for (index, neuron) in self.output_layer.iter().enumerate() {
+            error_component.push(output.get(index).unwrap() - neuron.act_val);
         }
+        println!("Error Components:");
+        error_component
+            .iter()
+            .for_each(|error| print!("{}, ", error));
+        println!();
+        //computing Der products
+        let mut der_products = Vec::<f64>::new();
+        for (index, neuron) in self.output_layer.iter().enumerate() {
+            der_products.push(
+                (1.0 - neuron.act_val) * neuron.act_val * error_component.get(index).unwrap(),
+            );
+        }
+        println!("DER Products:");
+        der_products.iter().for_each(|error| print!("{}, ", error));
+        println!();
     }
 }
