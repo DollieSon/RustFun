@@ -30,10 +30,6 @@ impl NeuronNode {
             act_val: 0.0,
         };
     }
-
-    fn reset_act(mut self) {
-        self.act_val = 0.0;
-    }
     fn activate(&mut self, prev_Nodes: &Vec<NeuronNode>, neuron_index: usize) {
         let mut activated_value = self.bias;
         for (index, neuron) in prev_Nodes.iter().enumerate() {
@@ -85,6 +81,7 @@ impl NeuralNet {
             .iter_mut()
             .enumerate()
             .for_each(|(index, neuron)| println!("{}", neuron.act_val));
+
         //activating hidden nodes
         println!("Activating Hidden Layer");
         self.hidden_layer
@@ -96,12 +93,14 @@ impl NeuralNet {
             .iter_mut()
             .enumerate()
             .for_each(|(index, neuron)| println!("{}", neuron.act_val));
+
         //calc output
         println!("Activating Output Layer");
         self.output_layer
             .iter_mut()
             .enumerate()
             .for_each(|(index, neuron)| neuron.activate(&self.hidden_layer, index));
+
         self.output_layer
             .iter_mut()
             .enumerate()
@@ -112,21 +111,22 @@ impl NeuralNet {
         for (index, neuron) in self.output_layer.iter().enumerate() {
             error_component.push(output.get(index).unwrap() - neuron.act_val);
         }
-        println!("Error Components:");
-        error_component
-            .iter()
-            .for_each(|error| print!("{}, ", error));
-        println!();
-        //computing Der products
+        // println!("Error Components:");
+        // error_component
+        //     .iter()
+        //     .for_each(|error| print!("{}, ", error));
+        // println!();
+
+        // computing Der products
         let mut der_products = Vec::<f64>::new();
         for (index, neuron) in self.output_layer.iter().enumerate() {
             der_products.push(
                 (1.0 - neuron.act_val) * neuron.act_val * error_component.get(index).unwrap(),
             );
         }
-        println!("DER Products:");
-        der_products.iter().for_each(|error| print!("{}, ", error));
-        println!();
+        // println!("DER Products:");
+        // der_products.iter().for_each(|error| print!("{}, ", error));
+        // println!();
 
         // calclulate the error rate of each neuron
         let mut error_rate = Vec::<f64>::new();
@@ -140,20 +140,20 @@ impl NeuralNet {
             error *= neuron.act_val * (1.0 - neuron.act_val);
             error_rate.push(error);
         }
-        println!("Error Rates(Hidden):");
-        error_rate.iter().for_each(|error| print!("{}, ", error));
-        println!();
-        //6 calculate ADJHO and change the weights
+        // println!("Error Rates(Hidden):");
+        // error_rate.iter().for_each(|error| print!("{}, ", error));
+        // println!();
 
-        println!("Old Vector Weights:");
-        self.hidden_layer
-            .iter()
-            .enumerate()
-            .for_each(|(index, node)| {
-                print!("Node {}: ", index);
-                node.weights.iter().for_each(|weight| print!("{} ", weight));
-                print!("\n");
-            });
+        //6 calculate ADJHO and change the weights
+        // println!("Old Vector Weights:");
+        // self.hidden_layer
+        //     .iter()
+        //     .enumerate()
+        //     .for_each(|(index, node)| {
+        //         print!("Node {}: ", index);
+        //         node.weights.iter().for_each(|weight| print!("{} ", weight));
+        //         print!("\n");
+        //     });
         for (index, neuron) in self.hidden_layer.iter_mut().enumerate() {
             let lrpres = neuron.act_val * LRP;
             der_products.iter().enumerate().for_each(|(index, der)| {
@@ -165,15 +165,16 @@ impl NeuralNet {
             });
         }
 
-        println!("New Vector Weights:");
-        self.hidden_layer
-            .iter()
-            .enumerate()
-            .for_each(|(index, node)| {
-                print!("Node {}: ", index);
-                node.weights.iter().for_each(|weight| print!("{} ", weight));
-                print!("\n");
-            });
+        // println!("New Vector Weights:");
+        // self.hidden_layer
+        //     .iter()
+        //     .enumerate()
+        //     .for_each(|(index, node)| {
+        //         print!("Node {}: ", index);
+        //         node.weights.iter().for_each(|weight| print!("{} ", weight));
+        //         print!("\n");
+        //     });
+
         //setting weights of input node (input -> hidden)
         let mut error_rate_input = 0.0;
         error_rate
@@ -195,5 +196,29 @@ impl NeuralNet {
         self.hidden_layer
             .iter_mut()
             .for_each(|neuron| neuron.bias += error_rate_input);
+
+        self.output_layer.iter().for_each(|neuron| {
+            println!("{}", neuron.act_val);
+        });
+    }
+    pub fn get_result(&mut self, input: &Vec<f64>) -> Vec<f64> {
+        self.input_layer
+            .iter_mut()
+            .enumerate()
+            .for_each(|(index, neuron)| neuron.act_val = *input.get(index).unwrap());
+        self.hidden_layer
+            .iter_mut()
+            .enumerate()
+            .for_each(|(index, neuron)| neuron.activate(&self.input_layer, index));
+        self.output_layer
+            .iter_mut()
+            .enumerate()
+            .for_each(|(index, neuron)| neuron.activate(&self.hidden_layer, index));
+        let mut res = Vec::<f64>::new();
+        self.output_layer.iter().for_each(|neuron| {
+            res.push(neuron.act_val);
+            println!("{}", neuron.act_val);
+        });
+        return res;
     }
 }
