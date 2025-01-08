@@ -3,6 +3,8 @@ use std::io::{self, Write};
 use rand::Rng;
 
 const EXP: f64 = 2.718281828459045;
+const LRP: f64 = 0.2;
+const LRPIN: f64 = 0.15;
 
 pub fn sigmoid(x: &f64) -> f64 {
     return 1.0 / (1.0 + EXP.powf(-x));
@@ -134,12 +136,64 @@ impl NeuralNet {
                 .weights
                 .iter()
                 .enumerate()
-                .for_each(|index, weight| error += (der_products.get(index).unwrap() * weight));
+                .for_each(|(index, weight)| error += (der_products.get(index).unwrap() * weight));
             error *= neuron.act_val * (1.0 - neuron.act_val);
             error_rate.push(error);
         }
         println!("Error Rates(Hidden):");
         error_rate.iter().for_each(|error| print!("{}, ", error));
         println!();
+        //6 calculate ADJHO and change the weights
+
+        println!("Old Vector Weights:");
+        self.hidden_layer
+            .iter()
+            .enumerate()
+            .for_each(|(index, node)| {
+                print!("Node {}: ", index);
+                node.weights.iter().for_each(|weight| print!("{} ", weight));
+                print!("\n");
+            });
+        for (index, neuron) in self.hidden_layer.iter_mut().enumerate() {
+            let lrpres = neuron.act_val * LRP;
+            der_products.iter().enumerate().for_each(|(index, der)| {
+                let added_weight = der * lrpres;
+                let weight = neuron.weights.get(index).unwrap() + added_weight;
+                if let Some(data) = neuron.weights.get_mut(index) {
+                    *data += weight;
+                }
+            });
+        }
+
+        println!("New Vector Weights:");
+        self.hidden_layer
+            .iter()
+            .enumerate()
+            .for_each(|(index, node)| {
+                print!("Node {}: ", index);
+                node.weights.iter().for_each(|weight| print!("{} ", weight));
+                print!("\n");
+            });
+        //setting weights of input node (input -> hidden)
+        let mut error_rate_input = 0.0;
+        error_rate
+            .iter()
+            .for_each(|error| error_rate_input += *error);
+        error_rate_input *= LRPIN;
+        for (index, neuron) in self.input_layer.iter_mut().enumerate() {
+            let weight_adjustment = error_rate_input * neuron.act_val;
+            neuron
+                .weights
+                .iter_mut()
+                .for_each(|weight| *weight += weight_adjustment);
+        }
+        //changing bias of output nodes
+        for (index, neuron) in self.output_layer.iter_mut().enumerate() {
+            neuron.bias += LRP * der_products.get(index).unwrap();
+        }
+        //changing bias of hidden nodes
+        self.hidden_layer
+            .iter_mut()
+            .for_each(|neuron| neuron.bias += error_rate_input);
     }
 }
