@@ -1,7 +1,6 @@
-use neural_net::*;
-
 pub mod neural_net;
 
+use neural_net::*;
 fn main() {
     let input_layer = vec![
         NeuronNode {
