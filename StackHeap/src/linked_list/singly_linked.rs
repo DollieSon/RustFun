@@ -64,6 +64,31 @@ impl<T: Display> SinglyLinked<T> {
         }
     }
 
+    //reversing a LL through iteration
+    // make current = head and prev = none
+    // loop x
+    // // temp = current.next
+    // // current.next = prev
+    // // prev = current
+
+    pub fn reverse_iterator(&mut self) {
+        let mut curr = self.head.take(); // we take
+        let mut prev: Option<Box<Node<T>>> = None;
+        while let Some(ref mut node) = curr {
+            let next = node.next.take();
+            match prev {
+                None => {
+                    node.next = None;
+                }
+                Some(_) => node.next = prev,
+            }
+            prev = curr;
+            curr = next;
+        }
+        self.head = prev;
+    }
+    pub fn reverse_recursive(&mut self) {}
+    //node.next = fn(node.next)
     // pub fn pop_end(&mut self) -> T {
     //     let mut curr = self.head;
     // }

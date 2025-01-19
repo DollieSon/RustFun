@@ -1,7 +1,7 @@
 pub mod linked_list;
 
 fn main() {
-    test4();
+    test5();
     // println!("Hello World!");
 }
 
@@ -39,5 +39,16 @@ fn test4() {
     list.print_all();
     list.print_all();
     println!("{} {} {}", list.pop(), list.pop(), list.pop());
+    list.print_all();
+}
+//reverse LL test
+fn test5() {
+    use linked_list::singly_linked::*;
+    let mut list = SinglyLinked::new(12);
+    list.insert_from_tail(14);
+    list.insert_from_tail(21);
+    list.insert_from_tail(30);
+    list.print_all();
+    list.reverse_iterator();
     list.print_all();
 }
