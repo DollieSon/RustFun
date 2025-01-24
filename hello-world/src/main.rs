@@ -1,4 +1,4 @@
-use std::{result, usize};
+use std::{collections::HashMap, result, usize};
 
 fn main() {
     println!("Hello, world!");
@@ -37,4 +37,35 @@ fn get_max_min(words: &Vec<&str>) -> (usize, usize) {
         }
     }
     return (max, min);
+}
+fn dna_to_rna(dna: &str) -> String {
+    dna.chars()
+        .map(|x| if x == 'T' { 'U' } else { x })
+        .collect()
+}
+
+fn rps(p1: &str, p2: &str) -> &'static str {
+    match (p1, p2) {
+        ("Scissors", "Rock") => {
+            return "Player 2 won!";
+        }
+        ("Scissors", "Paper") => {
+            return "Player 1 won!";
+        }
+        ("Rock", "Paper") => {
+            return "Player 2 won!";
+        }
+        ("Rock", "Scissors") => {
+            return "Player 1 won!";
+        }
+        ("Paper", "Scissors") => {
+            return "Player 2 won!";
+        }
+        ("Paper", "Rock") => {
+            return "Player 1 won!";
+        }
+        (_, _) => {
+            return "Draw!";
+        }
+    }
 }
