@@ -87,7 +87,9 @@ impl<T: Display> SinglyLinked<T> {
         }
         self.head = prev;
     }
-    pub fn reverse_recursive(&mut self) {}
+    pub fn reverse_recursive(&mut self) {
+        self.head = Self::reverse_recursive_helper(self.head.take());
+    }
     //node.next = fn(node.next)
     fn reverse_recursive_helper(mut curr_node: Option<Box<Node<T>>>) -> Option<Box<Node<T>>> {
         if let Some(mut node) = curr_node {

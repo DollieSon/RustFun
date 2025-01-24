@@ -3,6 +3,8 @@ pub mod linked_list;
 fn main() {
     test5();
     // println!("Hello World!");
+    let something = "Hello";
+    for char in something.chars() {}
 }
 
 fn test1() {
