@@ -4,15 +4,15 @@ use std::thread;
 pub mod conway;
 fn main() {
     use conway::ConwayBoard;
-    let mut board = ConwayBoard::new(11, 11);
+    let mut board = ConwayBoard::new(21, 21);
     board.print_board();
-    board.oposite(5, 5);
-    board.oposite(6, 5);
-    board.oposite(5, 6);
-    board.oposite(4, 5);
-    board.oposite(5, 4);
+    board.oposite(10, 10);
+    board.oposite(11, 10);
+    board.oposite(10, 11);
+    board.oposite(9, 10);
+    board.oposite(10, 9);
     let one_sec = time::Duration::from_millis(500);
-    for _ in 0..=10 {
+    for _ in 0..=100 {
         board.print_board();
         board.update();
         thread::sleep(one_sec);

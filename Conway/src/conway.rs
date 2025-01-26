@@ -7,7 +7,7 @@ pub struct ConwayBoard {
 }
 
 const ACTIVE: char = '#';
-const UNACTIVE: char = 'X';
+const UNACTIVE: char = ' ';
 
 impl ConwayBoard {
     pub fn new(height: usize, width: usize) -> Self {
@@ -70,6 +70,12 @@ impl ConwayBoard {
                             .unwrap() = true;
                     }
                     (_, _) => {
+                        *future_grid
+                            .get_mut(h_index)
+                            .unwrap()
+                            .get_mut(w_index)
+                            .unwrap() = false;
+
                         // println!("this shouldn't appear");
                     }
                 }
@@ -112,7 +118,7 @@ impl ConwayBoard {
     pub fn print_board(&self) {
         for width in self.get_frame().iter() {
             for block in width.iter() {
-                print!("| {} |", if *block == true { ACTIVE } else { UNACTIVE });
+                print!(" {} ", if *block == true { ACTIVE } else { UNACTIVE });
             }
             println!("");
         }
