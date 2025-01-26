@@ -11,7 +11,7 @@ fn main() {
     board.oposite(10, 11);
     board.oposite(9, 10);
     board.oposite(10, 9);
-    let one_sec = time::Duration::from_millis(500);
+    let one_sec = time::Duration::from_millis(250);
     for _ in 0..=100 {
         board.print_board();
         board.update();
