@@ -69,3 +69,30 @@ fn rps(p1: &str, p2: &str) -> &'static str {
         }
     }
 }
+
+fn number(bus_stops: &[(i32, i32)]) -> i32 {
+    bus_stops
+        .iter()
+        .fold(0, |acc, (get_on, get_off)| acc + *get_on - *get_off)
+}
+fn generate_shape(n: i32) -> String {
+    let mut res = "".to_string();
+    for num in 0..n {
+        res.push_str(format!("{end:+>pad$}", end = "\n", pad = num as usize).as_str());
+    }
+    res
+}
+fn solve(strings: &[String]) -> Vec<usize> {
+    let mut res = Vec::<usize>::new();
+    for str in strings {
+        let something = str.as_str().chars().enumerate().fold(0, |acc, (ind, ch)| {
+            if ((ch.to_ascii_lowercase() as u32) - 97) == (ind as u32) {
+                acc + 1
+            } else {
+                acc
+            }
+        });
+        res.push(something);
+    }
+    return res;
+}
