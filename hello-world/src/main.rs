@@ -96,3 +96,53 @@ fn solve(strings: &[String]) -> Vec<usize> {
     }
     return res;
 }
+fn min_sum(xs: &[u64]) -> u64 {
+    let mut vrec = xs.to_vec();
+    let mut running_sum = 0;
+    for x in 0..(vrec.len() / 2) {
+        running_sum += vrec.get(x).unwrap() * vrec.get(vrec.len() - 1 - x).unwrap();
+    }
+    running_sum
+}
+fn multiplication_table(len: usize) -> Vec<Vec<usize>> {
+    let mut res = Vec::new();
+    for x in 0..len {
+        let mut lower = Vec::<usize>::new();
+        for y in 0..len {
+            lower.push(x * y);
+        }
+        res.push(lower);
+    }
+    res
+}
+fn stock_list(list_art: Vec<&str>, list_cat: Vec<&str>) -> String {
+    let mut hashmap = HashMap::<String, i32>::new();
+    println!("{:?}", list_cat);
+    for cat in list_cat.iter() {
+        hashmap.insert(cat.to_string(), 0);
+    }
+    for art in list_art.iter() {
+        let mut some = art.to_string();
+        if let Some(x) = hashmap.get_mut(&some.chars().nth(0).unwrap().to_string()) {
+            let split: i32 = some.split(' ').nth(1).unwrap().parse().unwrap();
+            *x += split;
+        }
+    }
+    println!("{:?}", hashmap);
+    let mut res = "".to_string();
+    let mut keys = hashmap.keys().collect::<Vec<&String>>();
+    //keys.sort();
+    for key in list_cat.iter() {
+        res.push_str(format!(" ({} : {}) -", key, hashmap.get(&key.to_string()).unwrap()).as_str());
+    }
+
+    res[1..res.len() - 2].to_string()
+}
+fn sum_of_minimums(numbers: [[u8; 4]; 4]) -> u8 {
+    let something: u8 = numbers.iter().map(|mini| mini.iter().min().unwrap()).sum();
+    for mini in numbers.iter() {
+        println!("{}", mini.iter().min().unwrap());
+    }
+    println!("{:?}", something);
+    return something;
+}
