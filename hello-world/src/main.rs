@@ -1,4 +1,7 @@
-use std::{collections::HashMap, result, usize};
+use std::{
+    collections::{HashMap, HashSet},
+    result, usize,
+};
 
 fn main() {
     println!("Hello, world!");
@@ -145,4 +148,25 @@ fn sum_of_minimums(numbers: [[u8; 4]; 4]) -> u8 {
     }
     println!("{:?}", something);
     return something;
+}
+fn duplicate_encode(word: &str) -> String {
+    let mut res = "".to_string();
+    let mut set = HashMap::<char, u32>::new();
+    for ch in word.chars() {
+        if let Some(x) = set.get_mut(&ch.to_ascii_lowercase()) {
+            *x += 1;
+        } else {
+            set.insert(ch.to_ascii_lowercase(), 0);
+        }
+    }
+    for ch in word.chars() {
+        if let Some(x) = set.get(&ch.to_ascii_lowercase()) {
+            if x == 1 {
+                res += "(";
+            } else {
+                res += ")";
+            }
+        }
+    }
+    return res;
 }
