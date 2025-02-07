@@ -8,9 +8,9 @@ fn main() {
     board.print_board();
     board.oposite(10, 10);
     board.oposite(11, 10);
-    board.oposite(10, 11);
     board.oposite(9, 10);
     board.oposite(10, 9);
+    board.oposite(9, 11);
     let one_sec = time::Duration::from_millis(250);
     for _ in 0..=100 {
         board.print_board();

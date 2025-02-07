@@ -1,36 +1,23 @@
-pub mod moves;
-use moves::Move;
-enum Entity {
-    Base {
-        name: String,
-        base_stat: Stat,
-        moves: Vec<Move>,
-    },
-    Fighting {
-        original: Entity,
-        current_stat: Stat,
-        patttern: Vec<&Move>,
-    },
+use super::moves::Move;
+
+pub struct Entity {
+    name: String,
+    hp: u128,
+    speed: u128,
+    damage: u128,
+    mana: u128,
+    moves: Vec<Move>,
 }
 
-struct Stat {
-    hp: i32,
-    speed: i32,
-    damage: i32,
-    mana: i32,
-}
-
-impl Entity::Base {
-    fn to_fight(&self, fight: Vec<&Move>) -> Entity::Fighting {
-        Fighting {
-            original: &self,
-            current_stat: Stat {
-                hp: self.base_stat.hp,
-                speed: self.base_stat.speed,
-                damage: self.base_stat.damage,
-                mana: self.base_stat.mana,
-            },
-            pattern: fight,
-        }
+impl Entity {
+    pub fn new(name: String, stat: (u128, u128, u128, u128), moves: [Move; 4]) -> Self {
+        return Entity {
+            name: name,
+            hp: stat.0,
+            speed: stat.1,
+            damage: stat.2,
+            mana: stat.3,
+            moves: Vec::from(moves),
+        };
     }
 }

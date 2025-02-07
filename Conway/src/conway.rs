@@ -1,5 +1,3 @@
-use std::os::windows;
-
 pub struct ConwayBoard {
     odd_frame: Vec<Vec<bool>>,
     even_frame: Vec<Vec<bool>>,

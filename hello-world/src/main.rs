@@ -170,3 +170,20 @@ fn duplicate_encode(word: &str) -> String {
     }
     return res;
 }
+
+fn find_odd(arr: &[i32]) -> i32 {
+    let mut hash = HashMap::<i32, i32>::new();
+    arr.iter().for_each(|num| {
+        if let Some(val) = hash.get_mut(num) {
+            *val += 1;
+        } else {
+            hash.insert(*num, 1);
+        }
+    });
+    for (key, values) in hash.iter() {
+        if values % 2 == 1 {
+            return *key;
+        }
+    }
+    return -1;
+}

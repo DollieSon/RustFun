@@ -1,1 +1,1 @@
-struct Move {}
+pub struct Move {}
