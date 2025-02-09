@@ -187,3 +187,21 @@ fn find_odd(arr: &[i32]) -> i32 {
     }
     return -1;
 }
+fn hello(name: &str) -> String {
+    if name == "" {
+        return "Hello, World!".to_string();
+    }
+    let new_name = name
+        .chars()
+        .enumerate()
+        .map(|(ind, ch)| {
+            if ind == 0 {
+                ch.to_ascii_uppercase()
+            } else {
+                ch.to_ascii_lowercase()
+            }
+        })
+        .collect::<String>();
+
+    "Hello".to_string() + &new_name
+}
