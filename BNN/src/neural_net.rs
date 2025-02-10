@@ -51,17 +51,31 @@ impl NeuronNode {
 pub struct NeuralNet {
     // Input -> input_layer -> hident node -> hidden_layer -> output
     pub input_layer: Vec<NeuronNode>,
-    pub hidden_layer: Vec<NeuronNode>,
+    pub hidden_layer: Vec<Vec<NeuronNode>>,
     pub output_layer: Vec<NeuronNode>, //
 }
 
 impl NeuralNet {
-    pub fn new(input: u32, hidden: u32, output: u32) -> Self {
-        if input == 0 || hidden == 0 || output == 0 {
+    pub fn new(input: u32, hidden: Vec<u32>, output: u32) -> Self {
+        if input == 0 || hidden.len() == 0 || output == 0 {
             panic!("NN::new Cannot be zero!!");
         }
-        let input_vec: Vec<NeuronNode> = (0..input).map(|_| NeuronNode::new(hidden)).collect();
-        let hidden_vec: Vec<NeuronNode> = (0..hidden).map(|_| NeuronNode::new(output)).collect();
+        let input_vec: Vec<NeuronNode> = (0..input)
+            .map(|_| NeuronNode::new(*hidden.get(0).unwrap()))
+            .collect();
+        let hidden_vec: Vec<Vec<NeuronNode>> = hidden
+            .iter()
+            .enumerate()
+            .map(|(ind, len)| {
+                if ind + 1 == hidden.len() {
+                    return (0..*len).map(|_| NeuronNode::new(output)).collect();
+                } else {
+                    return (0..*len)
+                        .map(|_| NeuronNode::new(*hidden.get(ind + 1).unwrap()))
+                        .collect();
+                }
+            })
+            .collect();
         let output_vec: Vec<NeuronNode> = (0..output).map(|_| NeuronNode::new(1)).collect();
         return NeuralNet {
             input_layer: input_vec,
@@ -227,19 +241,36 @@ impl NeuralNet {
             });
         }
     }
-    pub fn get_result(&mut self, input: &Vec<f64>) -> Vec<f64> {
+    pub fn get_result(&mut self, input: &Vec<f64>, is_debug: bool) -> Vec<f64> {
+        if is_debug {
+            println!("Activating Input Layer")
+        }
         self.input_layer
             .iter_mut()
             .enumerate()
             .for_each(|(index, neuron)| neuron.act_val = *input.get(index).unwrap());
-        self.hidden_layer
-            .iter_mut()
-            .enumerate()
-            .for_each(|(index, neuron)| neuron.activate(&self.input_layer, index));
+        for ind in (0..self.hidden_layer.len()) {
+            let (prev_layer, curr_layer) = {
+                let (left, right) = self.hidden_layer.split_at_mut(ind + 1);
+                if ind == 0 {
+                    (&self.input_layer, &mut right[0])
+                } else {
+                    (&left[ind], &mut right[0])
+                }
+            };
+            curr_layer.iter_mut().enumerate().for_each(|(ind, neuron)| {
+                neuron.activate(prev_layer, ind);
+            });
+        }
         self.output_layer
             .iter_mut()
             .enumerate()
-            .for_each(|(index, neuron)| neuron.activate(&self.hidden_layer, index));
+            .for_each(|(index, neuron)| {
+                neuron.activate(
+                    self.hidden_layer.get(self.hidden_layer.len() - 1).unwrap(),
+                    index,
+                )
+            });
         let mut res = Vec::<f64>::new();
         self.output_layer.iter().for_each(|neuron| {
             res.push(neuron.act_val);
