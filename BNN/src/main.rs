@@ -52,13 +52,14 @@ fn main() {
     // NN.train(&vec![1.0, 1.0], &vec![1.0]);
 
     let mut new_NN = NeuralNet::new(2, 16, 1);
-    for _ in 0..1 {
-        println!("________EPOCH____");
+    println!("Training.....");
+    for _ in 0..1000 {
+        // println!("________EPOCH____");
         new_NN.train(&vec![1.0, 0.0], &vec![1.0], false);
         new_NN.train(&vec![1.0, 1.0], &vec![1.0], false);
         new_NN.train(&vec![0.0, 1.0], &vec![1.0], false);
-        new_NN.train(&vec![0.0, 0.0], &vec![0.0], true);
+        new_NN.train(&vec![0.0, 0.0], &vec![0.0], false);
     }
-
+    println!("Done.....");
     println!("TEST: {:?}", new_NN.get_result(&vec![1.0, 0.0]));
 }

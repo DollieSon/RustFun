@@ -44,7 +44,7 @@ impl NeuronNode {
         for (index, neuron) in prev_Nodes.iter().enumerate() {
             activated_value += neuron.act_val * (neuron.weights.get(neuron_index).unwrap());
         }
-        self.act_val = activated_value;
+        self.act_val = sigmoid(&activated_value);
     }
 }
 
