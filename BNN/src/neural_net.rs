@@ -286,10 +286,14 @@ impl NeuralNet {
             neuron.weights.iter().for_each(|w| println!("{}", w));
         });
         println!("Hidden Layer:");
-        self.hidden_layer.iter().for_each(|neuron| {
-            println!("Neuron Bias {}", neuron.bias);
-            neuron.weights.iter().for_each(|w| println!("{}", w));
-        });
+        for (ind, layer) in self.hidden_layer.iter().enumerate() {
+            print!("Layer {}: ", ind);
+            layer.iter().for_each(|neuron| {
+                print!("Neuron bias {}: ", neuron.bias);
+                neuron.weights.iter().for_each(|w| print!("{} ", w));
+            });
+            println!();
+        }
         println!("Output Layer:");
         self.output_layer.iter().for_each(|neuron| {
             println!("Neuron Bias {}", neuron.bias);
