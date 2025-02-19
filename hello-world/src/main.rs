@@ -205,3 +205,36 @@ fn hello(name: &str) -> String {
 
     "Hello".to_string() + &new_name
 }
+
+fn count(input: &str) -> HashMap<char, i32> {
+    let mut res = HashMap::<char, i32>::new();
+    input.chars().for_each(|c| match res.get_mut(&c) {
+        Some(count) => {
+            *count += 1;
+        }
+        None => {
+            res.insert(c.clone(), 1);
+        }
+    });
+    return res;
+}
+fn count_duplicates(text: &str) -> u32 {
+    let mut counter = HashMap::<char, u32>::new();
+    let mut count = 0;
+    for ch in text.to_ascii_lowercase().chars() {
+        match counter.get_mut(&ch) {
+            Some(item) => {
+                *item += 1;
+            }
+            None => {
+                counter.insert(ch, 1);
+            }
+        }
+    }
+    for (ch, cn) in counter.iter() {
+        if *cn > 1 {
+            count += 1;
+        }
+    }
+    count
+}
