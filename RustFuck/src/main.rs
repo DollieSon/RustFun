@@ -79,6 +79,13 @@ fn read(buffer: &String) {
                 }
                 None => {}
             },
+            '[' => match memory.get(mem_index) {
+                Some(loo) => {}
+                None => {
+                    panic!("error looping on: command no {}:{}", buffer_pointer, ch);
+                }
+            },
+
             _ => {
                 weird_stuff.push(ch);
             }
