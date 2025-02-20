@@ -238,3 +238,10 @@ fn count_duplicates(text: &str) -> u32 {
     }
     count
 }
+fn longest(a1: &str, a2: &str) -> String {
+    let mut new_string: Vec<char> = (a1.to_string() + a2)
+        .chars()
+        .iter
+        .is_sorted_by(|a, b| a <= b)
+        .collect();
+}
