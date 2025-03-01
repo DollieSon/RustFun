@@ -238,10 +238,32 @@ fn count_duplicates(text: &str) -> u32 {
     }
     count
 }
-fn longest(a1: &str, a2: &str) -> String {
-    let mut new_string: Vec<char> = (a1.to_string() + a2)
-        .chars()
-        .iter
-        .is_sorted_by(|a, b| a <= b)
-        .collect();
+// fn longest(a1: &str, a2: &str) -> String {
+//     let mut new_string: Vec<char> = (a1.to_string() + a2)
+//         .chars()
+//         .iter
+//         .is_sorted_by(|a, b| a <= b)
+//         .collect();
+// }
+fn comp(a: Vec<i64>, b: Vec<i64>) -> bool {
+    if a.len() != b.len() {
+        return false;
+    }
+    let mut a_temp = a.clone();
+    let mut b_temp = b.clone();
+    a_temp.sort();
+    b_temp.sort();
+    let mut iter_a = a_temp.iter();
+    let mut iter_b = b_temp.iter();
+    while let Some(a_num) = iter_a.next() {
+        let b_num = iter_b.next().unwrap();
+        if *b_num != *a_num
+            && ((*b_num) as f64).sqrt() as i64 != *a_num
+            && ((*a_num) as f64).sqrt() as i64 != *b_num
+        {
+            return false;
+        }
+    }
+    print
+    return true;
 }
