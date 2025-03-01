@@ -2,25 +2,44 @@ use core::fmt;
 use std::{cmp::Ordering, fmt::Debug};
 
 use super::entities::Entity;
-pub struct Move {
+pub struct Move<'a> {
     name: String,
     cost: u128,
     damage: u128,
-    curr_speed: u128,
-    // effect: fn(&mut Entity, &mut Move),
+    speed: i128,
+    curr_speed: i128,
+    effect: fn(&mut Entity, &mut Move),
+    owner: Option<&'a mut Entity>,
 }
 
-impl Move {
-    pub fn new(name: &str, cost: u128, damage: u128, curr_speed: u128) -> Self {
+impl<'owner> Move<'owner> {
+    pub fn new(
+        name: &str,
+        cost: u128,
+        damage: u128,
+        speed: i128,
+        effect: fn(&mut Entity, &mut Move),
+    ) -> Self {
         Move {
             name: name.to_string(),
             cost: cost,
             damage: damage,
-            curr_speed: curr_speed,
+            speed: speed,
+            curr_speed: speed,
+            effect: effect,
+            owner: None,
         }
     }
     pub fn speed_sort<'a, 'b>(a: &'a Move, b: &'b Move) -> Ordering {
         a.curr_speed.cmp(&b.curr_speed)
+    }
+    pub fn set_owner(mut self, owner: &'owner mut Entity) {
+        self.owner = Some(owner);
+    }
+    pub fn apply_effect(mut self, target: &mut Entity) {
+        //check if entity has cost
+        (self.effect)(target, &mut self);
+        self.curr_speed += self.speed;
     }
 }
 
