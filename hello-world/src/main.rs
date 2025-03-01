@@ -264,6 +264,5 @@ fn comp(a: Vec<i64>, b: Vec<i64>) -> bool {
             return false;
         }
     }
-    print
     return true;
 }
