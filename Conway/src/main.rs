@@ -16,6 +16,7 @@ fn main() {
         board.print_board();
         board.update();
         thread::sleep(one_sec);
+        //clears the screen
         print!("\x1B[2J");
     }
 }
