@@ -1,0 +1,8 @@
+[package]
+name = "ai-calc"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+dotenv = "0.15.0"
+google-generative-ai-rs = "0.3.4"
