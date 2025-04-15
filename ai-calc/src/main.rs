@@ -3,7 +3,7 @@ use google_generative_ai_rs::v1::{
     api::Client,
     gemini::{Content, Model, Part, Role, request::Request},
 };
-use std::env;
+use std::{env, io::stdin};
 
 pub fn create_request(question: String) -> Request {
     let final_string = question + ",Answer the best you can and with only a number";
@@ -43,18 +43,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let request = create_request("From now on, I will give you mathematical equations, do your best to answer them, and you should only give the final answer, which is a number and preceed it with \"Ans.\" so if I ask \"1+1\" you answer with \"Ans.2\", if you understand, respond with 1.".to_string());
     // let res = post_request(&client, request).await;
     // println!("{res}");
+    for _ in 0..10 {
+        let mut question = String::new();
+        println!("Enter Equation?:");
+        stdin().read_line(&mut question).unwrap();
+        let request = create_request(question);
+        let res = post_request(&client, request).await;
+        print!(":{res}");
+    }
 
-    let request = create_request("2-2".to_string());
-    let res = post_request(&client, request).await;
-    println!("{res}");
+    // let request = create_request("2-2".to_string());
+    // let res = post_request(&client, request).await;
+    // println!("{res}");
 
-    let request = create_request("3*3".to_string());
-    let res = post_request(&client, request).await;
-    println!("{res}");
+    // let request = create_request("3*3".to_string());
+    // let res = post_request(&client, request).await;
+    // println!("{res}");
 
-    let request = create_request("5/5".to_string());
-    let res = post_request(&client, request).await;
-    println!("{res}");
+    // let request = create_request("5/5".to_string());
+    // let res = post_request(&client, request).await;
+    // println!("{res}");
 
     Ok(())
 }
