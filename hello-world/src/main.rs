@@ -266,3 +266,57 @@ fn comp(a: Vec<i64>, b: Vec<i64>) -> bool {
     }
     return true;
 }
+
+pub fn min_sum2(nums1: Vec<i32>, nums2: Vec<i32>) -> i64 {
+    let mut n1:(i64,i32) = (0,0);
+    let mut n2:(i64,i32) = (0,0);
+    for num in nums1{
+        if num == 0 {
+            n1.1 +=1;
+            // n1.0+=1;
+        }
+        n1.0+=num as i64;
+    }
+    for num in nums2{
+        if num == 0 {
+            n2.1 +=1;
+            // n2.0+=1;
+        }
+        n2.0+=num as i64;
+    }
+    let (max,min) = {
+        if n1.0 > n2.0{
+            (n1,n2)
+        }else{
+            (n2,n1)
+        }
+    };
+    match (max.1,min.1) {
+        (0,0) => {
+            if(max.0 != min.0){
+                return -1;
+            }else{
+                return max.0
+            }
+        }
+        (0,x)=>{
+            if((min.0 + (min.1 as i64)) > max.0){
+                return -1;
+            }else{
+                return max.0;
+            }
+        }
+        (x,0)=> {
+            return -1;
+        }
+        (x,y)=> {
+            let final_form1 = max.0 + x as i64;
+            let final_form2 = min.0 + y as i64;
+            if(final_form1 > final_form2){
+                return final_form1;
+            }else{
+                return final_form2;
+            }
+        }
+    }
+}
