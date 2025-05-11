@@ -17,7 +17,8 @@ fn binary_slice_to_number(slice: &[u32]) -> u32 {
     result
 }
 fn remove_smallest(numbers: &[u32]) -> Vec<u32> {
-    numbers.iter().positon_min()
+    // numbers.iter().positon_min()
+    return vec![];
 }
 fn mx_dif_lg(a1: Vec<&str>, a2: Vec<&str>) -> i32 {
     if a1.len() == 0 || a2.len() == 0 {
@@ -26,6 +27,7 @@ fn mx_dif_lg(a1: Vec<&str>, a2: Vec<&str>) -> i32 {
     //big .. small
     let a1_mesurements = get_max_min(&a1);
     let a2_mesurements = get_max_min(&a2);
+    return 0;
 }
 fn get_max_min(words: &Vec<&str>) -> (usize, usize) {
     let mut min = usize::MAX;
@@ -161,7 +163,7 @@ fn duplicate_encode(word: &str) -> String {
     }
     for ch in word.chars() {
         if let Some(x) = set.get(&ch.to_ascii_lowercase()) {
-            if x == 1 {
+            if *x == 1 {
                 res += "(";
             } else {
                 res += ")";
@@ -319,4 +321,8 @@ pub fn min_sum2(nums1: Vec<i32>, nums2: Vec<i32>) -> i64 {
             }
         }
     }
+}
+
+pub fn three_consecutive_odds(arr: Vec<i32>) -> bool {
+    return arr.iter().fold(0, |count,num| if count == 3 {count} else if num%2 == 1 {count+1} else {0} ) >= 3;
 }
