@@ -1,6 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet},
-    result, usize,
+    collections::{HashMap, HashSet}, fs::FileTimes, result, usize
 };
 
 fn main() {
@@ -325,4 +324,46 @@ pub fn min_sum2(nums1: Vec<i32>, nums2: Vec<i32>) -> i64 {
 
 pub fn three_consecutive_odds(arr: Vec<i32>) -> bool {
     return arr.iter().fold(0, |count,num| if count == 3 {count} else if num%2 == 1 {count+1} else {0} ) >= 3;
+}
+pub fn find_even_numbers(digits: Vec<i32>) -> Vec<i32> {
+    let mut res = Vec::<i32>::new();
+    // check if all digits are odd
+    if  digits.iter().all(|x| x%2 ==1){
+        return res;
+    }
+    let mut temp_num = 0;
+    for (ind1, num1) in digits.iter().enumerate(){
+        for (ind2, num2) in digits.iter().enumerate(){
+            if ind2 == ind1{
+                continue;
+            }
+            for (ind3, num3) in digits.iter().enumerate(){
+                if num3%2==1 || ind3 == ind1 || ind2 == ind3{
+                    continue;
+                }
+                temp_num = (*num1*100)+(*num2*10) + *num3;
+            }
+        }
+    }
+    res.sort();
+    return res;
+}
+pub fn length_after_transformations(s: String, t: i32) -> i32 {
+    let mut timeline = vec![0;26];
+    let base = 'a' as i32;
+    for ch in s.chars(){
+        let ch_index = ch as i32 - base;
+        timeline[ch_index as usize] +=1;
+    }
+    // simulate timeline
+    for n in 0..t{
+        let index = (25 - (n % 26)) as usize;
+        let next_index = ((index+1) % 26) as usize;
+        timeline[next_index] = (timeline[next_index] + timeline[index]) % (10_i32.pow(9) + 7);
+    }
+    let mut res = 0;
+    for n in timeline.iter(){
+        res = (res + *n) % (10_i32.pow(9) + 7);
+    }
+    return res;
 }
