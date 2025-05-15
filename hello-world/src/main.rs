@@ -348,7 +348,7 @@ pub fn find_even_numbers(digits: Vec<i32>) -> Vec<i32> {
     res.sort();
     return res;
 }
-pub fn length_after_transformations(s: String, t: i32) -> i32 {
+pub fn length_after_transformations1(s: String, t: i32) -> i32 {
     let mut timeline = vec![0;26];
     let base = 'a' as i32;
     for ch in s.chars(){
@@ -366,4 +366,74 @@ pub fn length_after_transformations(s: String, t: i32) -> i32 {
         res = (res + *n) % (10_i32.pow(9) + 7);
     }
     return res;
+}
+const CLAMPER:i32 = 1000000007;
+pub fn length_after_transformations(s: String, t: i32, nums: Vec<i32>) -> i32 { 
+    let mut population = HashMap::<i32,i32>::new();
+    let base = 'a' as i32;
+    for ch in s.chars(){
+        let ch_index = ch as i32 - base;
+        match population.get_mut(&ch_index){
+            Some(pop) => {
+                *pop +=1;
+            }
+            None => {
+                population.insert(ch_index, 1);
+            }
+        }
+    }
+    for _ in 0..t{
+        let mut replacement = HashMap::<i32,i32>::new();
+        for (key,val) in population.iter_mut(){
+            let spread = nums[(*key) as usize];
+            let max = *key + spread;
+            for cover in (*key+1)..=(max){
+                let index = cover % 26;
+                match replacement.get_mut(&index){
+                    Some(temp_pop) =>{
+                        let num = (*temp_pop + *val) % CLAMPER;
+                        *temp_pop = num;
+                    }
+                    None => {
+                        replacement.insert(index, *val);
+                    }
+                }
+            }
+        }
+        population = replacement;
+    }
+    let mut res = 0;
+    for num in population.values(){
+        res = (res + *num) % CLAMPER;
+    }
+    return 0;
+}
+pub fn cal_points(operations: Vec<String>) -> i32 {
+    let mut stack = Vec::<i32>::new();
+    for op in operations{
+        if let Ok(num) = op.parse::<i32>(){
+            stack.push(num);
+        }else {
+            match op.as_str() {
+                "+" => {
+                    let mut iter = stack.iter().rev();
+                    let x1 = iter.next().unwrap();
+                    let x2 = iter.next().unwrap();
+                    stack.push(((*x1 * *x2)));
+                }
+                "D" => {
+                    let x = stack.last().unwrap().clone();
+                    stack.push(x * 2);
+                }
+                "C" => {
+                    let _ = stack.pop().unwrap();
+                }
+                _ => {
+                    panic!("operation error");
+                }
+            }   
+        }
+        
+    }
+    return stack.iter().sum();
 }
