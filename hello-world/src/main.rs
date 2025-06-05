@@ -437,3 +437,25 @@ pub fn cal_points(operations: Vec<String>) -> i32 {
     }
     return stack.iter().sum();
 }
+fn dig_pow(n: i64, p: i32) -> i64 {
+    // get every digit 
+    let mut digits = Vec::<i64>::new();
+    let mut temp = n;
+    while temp > 0 {
+        digits.push(temp%10);
+        temp=temp/10;
+    }
+    let sum = digits.iter().rev().enumerate().fold(0,|acc,(i,digit)| {
+        acc + (*digit).pow((i as u32)+p as u32)
+    });
+    // your code
+    return if sum % n == 0 {sum / n} else {-1};
+}
+fn heron(a: u32, b: u32, c: u32) -> f64 {
+    let s = (a + b + c) as f64 / 2.0;
+    return (s * (s - a as f64) * (s - b as f64) * (s - c as f64)).sqrt();
+}
+pub fn remove_char(s: &str) -> String {
+    let temp = &s[1..s.len()-1];
+    String::from(temp)
+}
