@@ -1,5 +1,5 @@
 use std::{
-    collections::{HashMap, HashSet}, fs::FileTimes, result, usize
+    collections::{HashMap, HashSet}, fmt::format, fs::FileTimes, result, u32, usize
 };
 
 fn main() {
@@ -458,4 +458,46 @@ fn heron(a: u32, b: u32, c: u32) -> f64 {
 pub fn remove_char(s: &str) -> String {
     let temp = &s[1..s.len()-1];
     String::from(temp)
+}
+fn thirt(n: i64) -> i64{
+    let seq:[i64;7] = [1,10,9,12,3,4,1];
+    let mut res = n;
+    while (res > 100){
+        let mut temp = res;
+        let mut index = 0;
+        while (temp > 0) {
+            let n = temp%10;
+            temp/=10;
+            res += n * seq[(index%seq.len()) as usize];
+            index+=1;
+        }
+    }
+    return res;
+}
+fn positive_sum(slice: &[i32]) -> i32 {
+    return slice.iter().filter(|x| x.is_positive()).sum();
+}
+fn dashatize(n: i64) -> String {
+    let temp_res:String = n.abs().to_string().chars().map(|x| if x.to_digit(10).unwrap()%2 == 1 {format!("-{x}-")} else {format!("{x}")}).collect();
+    let mut res = String::new();
+    let mut prev = 'x';
+    for (index,ch) in temp_res.chars().enumerate(){
+        if (ch == '-') && (index == 0 || index == temp_res.len()-1 || prev == '-'){
+            //skip hehe
+            continue;
+        }
+        res.push_str(&String::from(ch));
+        prev = ch;
+    }
+    return res;
+}
+fn tidy_number(n: u64) -> bool {
+    let mut prev:u32 = u32::MAX;
+    for num in n.to_string().chars(){
+        if num.to_digit(10).unwrap() > prev{
+            return false
+        }
+        prev = num.to_digit(10).unwrap();
+    }
+    return true;
 }
