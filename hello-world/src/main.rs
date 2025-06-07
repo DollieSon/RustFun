@@ -501,3 +501,36 @@ fn tidy_number(n: u64) -> bool {
     }
     return true;
 }
+fn row_weights(array: Vec<u32>) -> (u32, u32) {
+    array.iter().enumerate().fold((0,0), |(odd,even),(index,num)|if index%2==1{(odd+(*num),even)}else{(odd,even+(*num))})
+}
+
+fn order(sentence: &str) -> String {
+    if sentence.len() == 0 {return String::new();}
+    let mut holder = vec![String::new();9];
+    for word in sentence.split_ascii_whitespace(){
+        for ch in word.chars(){
+            if let Some(num) = ch.to_digit(10){
+                if holder[(num-1) as usize].len() > 0 {
+                holder[(num-1) as usize].push(' ');
+                }
+                holder[(num-1) as usize].push_str(word);
+            }
+        }
+    }
+    return holder.iter().filter(|x| x.len() > 0).map(|s| s.to_string()).collect::<Vec<_>>().join(" ");
+}
+
+fn is_euri(a:u64) -> bool{
+    a.to_string().chars().map(|c| c.to_digit(10).unwrap() as u64).enumerate().fold(0, |acc,(index,num)| acc + num.pow(index as u32 +1)) == a
+}
+
+fn sum_dig_pow(a: u64, b: u64) -> Vec<u64> {
+    let mut res = vec![];
+    for x in a..=b{
+        if x < 10 || is_euri(x){
+            res.push(x);
+        }
+    }
+    return res;
+}
