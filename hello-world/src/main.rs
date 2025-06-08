@@ -534,3 +534,94 @@ fn sum_dig_pow(a: u64, b: u64) -> Vec<u64> {
     }
     return res;
 }
+pub fn max_sum_distinct_triplet(x: Vec<i32>, y: Vec<i32>) -> i32 {
+    // first make sure that there are 3 distinct in x
+    let mut map = HashMap::<i32,Vec<i32>>::new();
+    for (index,num) in x.iter().enumerate(){
+        match map.get_mut(num){
+            Some(vec) => {
+                vec.push(*(y.get(index).unwrap()));
+            }
+            None => {
+                map.insert(*num, vec![*(y.get(index).unwrap())]);
+            }
+        }
+    }
+    if map.len() < 3 {
+        return -1;
+    }
+    let mut clamped:Vec<i32> = map.into_values().map(|vec| vec.iter().max().unwrap().clone()).collect();
+    clamped.sort_unstable_by(|a,b|b.cmp(a));
+    return clamped.iter().take(3).clone().sum();
+}
+pub fn maximum_profit(prices: Vec<i32>, k: i32) -> i64 {
+    let mut profit = Vec::<i64>::new();
+    let mut holder:Option<i64> = None;
+    let mut diff = 0;
+    for window in prices.windows(2) {
+        let [prev,curr] = window else {continue;};
+        diff = prev - curr;
+        match holder {
+            Some(num) => {
+                if num.is_negative() && diff.is_negative(){
+                    holder = Some(num+(diff as i64));
+                }else {
+                    profit.push(num.abs());
+                    holder = None;
+                }
+            }
+            None => {
+                holder = Some(diff);
+            }
+        }
+    }
+    match holder {
+        Some(num)=>{profit.push(num.abs());}
+        None => {}
+    }
+    profit.sort_unstable_by(|a,b|b.cmp(a));
+    println!("{:?}",profit);
+    return profit.iter().take(k as usize).sum();
+}
+pub fn calculate_difference(holder:&mut Option<usize>,index2:usize, counter: &mut i32) {
+    match holder{
+        Some(index1)=>{
+            *counter = (index2 - *index1) as i32;
+            *holder = None;
+        }
+        None => {
+            *holder = Some(index2);
+        }
+    }
+}
+pub fn can_make_equal(nums: Vec<i32>, k: i32) -> bool {
+    let mut neg_holder:Option<usize> = None;
+    let mut pos_holder:Option<usize> = None;
+    let mut neg_count = 0;
+    let mut pos_count = 0;
+    for (index,num) in nums.iter().enumerate(){
+        match num {
+            -1 => {
+                calculate_difference(&mut neg_holder, index,&mut neg_count);
+            }
+            1 => {
+                calculate_difference(&mut pos_holder, index,&mut pos_count);
+            } 
+            _ => {
+                //missed the part where thats my problem
+            }
+        }
+    }
+    match (neg_holder,pos_holder) {
+        (Some(_),Some(_)) => {
+            return false;
+        }
+        (Some(_),None) => {
+            return pos_count <= k;           
+        }
+        (_,_) => {
+            return neg_count <= k;           
+        }
+    }
+    return false;;
+}
